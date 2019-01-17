@@ -1,0 +1,147 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>WP2</title>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    
+    <style>
+        body {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-size: 30px;
+  background-image : url("book.jpg");
+   background-size   : 100% 100%;
+  color:#770000;
+  font-family: 'HG正楷書体-PRO';
+}
+
+header {
+  background-color: darkblue;
+  border-bottom: 1px solid #ccc;
+  text-align: center;
+  color: #fff;
+  font-family: serif;
+}
+
+main {
+  border-bottom: 1px solid #ccc;
+  font-family: serif;
+}
+
+h2{
+  font-size:18px;
+}
+
+p {
+  font-size: 100%;
+  text-align: center;
+  border-bottom: 1px solid #fff;
+  height: 100px;
+  font-family: serif;
+}
+
+ul {
+  padding: 0;
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+}
+
+li {
+  text-align: center;
+  list-style-type: none;
+  border: 1px solid #666;
+  background-color: #FFFFFF;
+  display: table-cell;
+  cursor: pointer;
+}
+
+
+textarea{
+  margin: 3%;
+  width: 30%;
+  height: 30px;
+  font-size:50%;
+  box-shadow: 3px 3px 3px 3px #555;
+}
+        
+#query{
+  font-size: 16px;
+  background-color:#FFFFFF;
+  color: #B87333;
+  font-family: 'HG正楷書体-PRO';
+}   
+        
+#mybtn{
+    background-color: #FFFFFF;
+    font-family: 'Chick';
+}
+</style>
+
+</head>
+
+<body>
+    <br><br><br><h1>This search</h1>
+    <input id="query" type="text">
+    <button id="mybtn">search</button>
+    <center>
+        <div id="contents"></div>
+    </center>
+
+    <script>
+     
+        
+            "use strict";//こっから
+      // unsupported.
+      if (!'SpeechSynthesisUtterance' in window) {
+          alert('Speech synthesis(音声合成) APIには未対応です.');
+
+      }
+      // 発話機能をインスタンス化
+      var msg = new SpeechSynthesisUtterance();
+
+      $('#mybtn').on('click',function() {
+        // 発話実行
+          
+        msg.volume = 1.0; // 音量 min 0 ~ max 1
+        msg.rate = 1.0; // 速度 min 0 ~ max 10
+        msg.pitch = 1.2; // 音程 min 0 ~ max 2
+
+        msg.text = $('#query').val();  // 話す中身
+        msg.lang = 'ja-JP'; // en-US or ja-JP
+
+        speechSynthesis.speak(msg);
+
+        // 終了時の処理
+        msg.onend = function (event) {
+          console.log('喋った時間：' + event.elapsedTime + 's');
+        }
+      });//ここまで
+       
+
+        $(function() {
+            $("#mybtn").on("click", showdata);
+
+            function showdata() {
+                let query = $("#query").val();
+                $.getJSON(
+                    //"https://www.googleapis.com/books/v1/volumes?q=" + query,
+                    "http://web.fujimura.com/ko/books.php?q=" + query,
+                    function(data) {
+                        console.log(data);
+                        console.log(data.items[0].volumeInfo.imageLinks.thumbnail);
+                        console.log(data.items[0].volumeInfo.title);
+
+                        $("#contents").append("<ul><img src='" + data.items[0].volumeInfo.imageLinks.thumbnail + "'/>");
+                        $("#contents").append("<li>タイトル「" + data.items[0].volumeInfo.title  + "」</li><br>");
+                        $("#contents").append("<li>発行日：" + data.items[0].volumeInfo.publishedDate + "</li></ul>");
+                    });
+            }
+        });
+        
+        
+        
+    </script>
+</body>
+</html>
