@@ -126,8 +126,8 @@ textarea{
             function showdata() {
                 let query = $("#query").val();
                 $.getJSON(
-                    //"https://www.googleapis.com/books/v1/volumes?q=" + query,
-                    "http://web.fujimura.com/ko/books.php?q=" + query,
+                    "https://www.googleapis.com/books/v1/volumes?q=" + query,
+                    //"http://web.fujimura.com/ko/books.php?q=" + query,
                     function(data) {
                         console.log(data);
                         console.log(data.items[0].volumeInfo.imageLinks.thumbnail);
